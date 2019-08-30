@@ -3,25 +3,35 @@ const { ApolloServer, gql } = require('apollo-server-express');
 const MongoClient = require('mongodb').MongoClient;
 let db;
 
-MongoClient.connect('mongodb://localhost/graphqldb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, function (err, client) {
-  if (err) throw err;
-  db = client.db('graphqldb');
-});
+(async () => {
+  MongoClient.connect('mongodb://localhost/graphqldb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }, function (err, client) {
+    if (err) throw err;
+    db = client.db('graphqldb');
+  });
+})();
 
 // Construct the schema.
 const typeDefs = gql`
   type Query {
     friends: String
     allUsers: [User]!
+    userDetails(input: FilterUserFields): User
+    userById(id: ID!): User
   }
   type User {
     id: ID!
     firstName: String
     lastName: String
     name: String
+    phone: Int
+  }
+  input FilterUserFields {
+    id: ID
+    firstName: String
+    lastName: String
     phone: Int
   }
 `;
@@ -32,8 +42,25 @@ const resolvers = {
     friends: () => 'Hello friends!',
     allUsers: async () => {
       const result = await db.collection('user').find().toArray();
+      result.forEach(obj => {
+        obj.name = `${obj.firstName} ${obj.lastName}`;
+        obj.id = obj._id
+      });
+      return result;
+    },
+    userDetails: async () => {
+      const result = await db.collection('user').find().toArray();
       result.forEach(obj => { obj.name = obj.firstName + ' ' + obj.lastName });
       return result;
+    },
+    userById: async (root, args, context, info) => {
+      const result = await db.collection('user').findOne({_id: parseInt(args.id)});
+      if (result) {
+        result.name = result.firstName + ' ' + result.lastName;
+        result.id = result._id;
+        return result;
+      }
+      return null;
     }
   },
 };
