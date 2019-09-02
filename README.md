@@ -1,0 +1,30 @@
+# Mongo Apollo Server
+Apollo GraphQL Server is created with Express.js. MongoDB data is being provided through GraphQL
+
+<h4>Example data in MongoDB:</h4>
+<h5>db.user.find().pretty()</h5>
+
+```
+{ "_id" : 1, "firstName" : "Suman", "lastName" : "Chalki", "phone" : 9765 }
+{ "_id" : 2, "firstName" : "John", "lastName" : "Nash", "phone" : 1111 }
+{ "_id" : 3, "firstName" : "Peter", "lastName" : "Parker", "phone" : 2222 }
+```
+
+<h5>db.contact.find().pretty()</h5>
+
+```
+{ "_id" : 1, "user1" : 1, "user2" : 2 }
+{ "_id" : 2, "user1" : 1, "user2" : 3 }
+```
+
+<h4>Example queries:</h4>
+
+```
+{
+  allUsers {
+    id,
+    name,
+    lastName
+  }
+}
+```
