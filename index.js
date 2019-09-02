@@ -16,10 +16,10 @@ let db;
 // Construct the schema.
 const typeDefs = gql`
   type Query {
-    friends: String
     allUsers: [User]!
-    userDetails(input: FilterUserFields): User
     userById(id: ID!): User
+    filterUsers(input: FilterUserFields): [User]!
+    friends: String
   }
   type User {
     id: ID!
@@ -39,18 +39,12 @@ const typeDefs = gql`
 // Provide resolver functions for the schema fields.
 const resolvers = {
   Query: {
-    friends: () => 'Hello friends!',
     allUsers: async () => {
       const result = await db.collection('user').find().toArray();
       result.forEach(obj => {
         obj.name = `${obj.firstName} ${obj.lastName}`;
         obj.id = obj._id
       });
-      return result;
-    },
-    userDetails: async () => {
-      const result = await db.collection('user').find().toArray();
-      result.forEach(obj => { obj.name = obj.firstName + ' ' + obj.lastName });
       return result;
     },
     userById: async (root, args, context, info) => {
@@ -61,7 +55,16 @@ const resolvers = {
         return result;
       }
       return null;
-    }
+    },
+    filterUsers: async (root, args, context, info) => {console.log(args.input);
+      const result = await db.collection('user').find(args.input).toArray();
+      result.forEach(obj => {
+        obj.name = `${obj.firstName} ${obj.lastName}`;
+        obj.id = obj._id
+      });
+      return result;
+    },
+    friends: () => 'Hello friends!'
   },
 };
 

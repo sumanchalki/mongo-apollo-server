@@ -6,8 +6,9 @@ Apollo GraphQL Server is created with Express.js. MongoDB data is being provided
 
 ```
 { "_id" : 1, "firstName" : "Suman", "lastName" : "Chalki", "phone" : 9765 }
-{ "_id" : 2, "firstName" : "John", "lastName" : "Nash", "phone" : 1111 }
-{ "_id" : 3, "firstName" : "Peter", "lastName" : "Parker", "phone" : 2222 }
+{ "_id" : 2, "firstName" : "Peter", "lastName" : "Parker", "phone" : 2222 }
+{ "_id" : 3, "firstName" : "John", "lastName" : "Nash", "phone" : 1111 }
+{ "_id" : 4, "firstName" : "Peter", "lastName" : "Pan", "phone" : 1234 }
 ```
 
 <h5>db.contact.find().pretty()</h5>
@@ -25,6 +26,22 @@ Apollo GraphQL Server is created with Express.js. MongoDB data is being provided
     id,
     name,
     lastName
+  }
+}
+```
+
+```
+{
+  userById(id: 2) {
+    name
+  }
+}
+```
+
+```
+{
+  filterUsers (input: {firstName: "Peter"}) {
+    name
   }
 }
 ```
