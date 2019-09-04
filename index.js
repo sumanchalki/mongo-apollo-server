@@ -23,13 +23,28 @@ const resolvers = {
     },
     userById: async (root, args, context, info) => {
       const result = await db.collection('user').findOne({_id: parseInt(args.id)});
-      return null;
+      return result;
     },
     filterUsers: async (root, args, context, info) => {
       const result = await db.collection('user').find(args.input).toArray();
       return result;
     },
     friends: () => 'Hello friends!'
+  },
+  Mutation: {
+    addUser: async (parent, args) => {
+      const lastId = await db.collection('user').find({}).sort({_id:-1}).limit(1).toArray();
+
+      const newUser = {
+        _id: lastId[0]._id + 1,
+        firstName: args.firstName,
+        lastName: args.lastName,
+        phone: args.phone
+      };
+
+      await db.collection('user').insertOne(newUser);
+      return newUser;
+    }
   },
   User: {
     id: parent => parent._id,

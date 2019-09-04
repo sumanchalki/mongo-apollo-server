@@ -7,6 +7,11 @@ const typeDefs = gql`
     filterUsers(input: FilterUserFields): [User]!
     friends: String
   }
+  type Mutation {
+    addUser(firstName: String!, lastName: String!, phone: Int): User!
+    updateUser(id: ID!, firstName: String, lastName: String, phone: Int): User!
+    deleteUser(id: ID!): User!
+  }
   type User {
     id: ID!
     firstName: String

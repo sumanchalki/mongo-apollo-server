@@ -31,7 +31,7 @@ Apollo GraphQL Server is created with Express.js. MongoDB data is being provided
 ```
 
 ```
-{
+query {
   userById(id: 2) {
     name
   }
@@ -41,6 +41,19 @@ Apollo GraphQL Server is created with Express.js. MongoDB data is being provided
 ```
 {
   filterUsers (input: {firstName: "Peter"}) {
+    name
+  }
+}
+```
+
+```
+mutation {
+  addUser (
+    firstName: "John"
+    lastName: "Resig"
+    phone: 4444
+  ) {
+    id
     name
   }
 }
