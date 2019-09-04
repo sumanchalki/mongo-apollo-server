@@ -1,6 +1,7 @@
 const express = require('express');
-const { ApolloServer, gql } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express');
 const MongoClient = require('mongodb').MongoClient;
+const typeDefs = require('./schema.js');
 let db;
 
 (async () => {
@@ -12,29 +13,6 @@ let db;
     db = client.db('graphqldb');
   });
 })();
-
-// Construct the schema.
-const typeDefs = gql`
-  type Query {
-    allUsers: [User]!
-    userById(id: ID!): User
-    filterUsers(input: FilterUserFields): [User]!
-    friends: String
-  }
-  type User {
-    id: ID!
-    firstName: String
-    lastName: String
-    name: String
-    phone: Int
-  }
-  input FilterUserFields {
-    id: ID
-    firstName: String
-    lastName: String
-    phone: Int
-  }
-`;
 
 // Provide resolver functions for the schema fields.
 const resolvers = {
