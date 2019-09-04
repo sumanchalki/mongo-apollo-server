@@ -41,31 +41,22 @@ const resolvers = {
   Query: {
     allUsers: async () => {
       const result = await db.collection('user').find().toArray();
-      result.forEach(obj => {
-        obj.name = `${obj.firstName} ${obj.lastName}`;
-        obj.id = obj._id
-      });
       return result;
     },
     userById: async (root, args, context, info) => {
       const result = await db.collection('user').findOne({_id: parseInt(args.id)});
-      if (result) {
-        result.name = result.firstName + ' ' + result.lastName;
-        result.id = result._id;
-        return result;
-      }
       return null;
     },
-    filterUsers: async (root, args, context, info) => {console.log(args.input);
+    filterUsers: async (root, args, context, info) => {
       const result = await db.collection('user').find(args.input).toArray();
-      result.forEach(obj => {
-        obj.name = `${obj.firstName} ${obj.lastName}`;
-        obj.id = obj._id
-      });
       return result;
     },
     friends: () => 'Hello friends!'
   },
+  User: {
+    id: parent => parent._id,
+    name: parent => `${parent.firstName} ${parent.lastName}`
+  }
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
