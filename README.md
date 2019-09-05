@@ -23,9 +23,17 @@ Apollo GraphQL Server is created with Express.js. MongoDB data is being provided
 ```
 {
   allUsers {
-    id,
-    name,
+    id
+    name
     lastName
+  }
+}
+```
+
+```
+{
+  allUsers (orderBy: firstName_ASC, skip: 1, first: 2) {
+    name
   }
 }
 ```

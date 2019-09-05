@@ -2,7 +2,7 @@ const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   type Query {
-    allUsers: [User]!
+    allUsers(skip: Int, first: Int, orderBy: UserOrderByInput): [User]!
     userById(id: ID!): User
     filterUsers(input: FilterUserFields): [User]!
     friends: String
@@ -24,6 +24,16 @@ const typeDefs = gql`
     firstName: String
     lastName: String
     phone: Int
+  }
+  enum UserOrderByInput {
+    id_ASC
+    id_DESC
+    firstName_ASC
+    firstName_DESC
+    lastName_ASC
+    lastName_DESC
+    phone_ASC
+    phone_DESC
   }
 `;
 

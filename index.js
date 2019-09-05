@@ -17,12 +17,45 @@ let db;
 // Provide resolver functions for the schema fields.
 const resolvers = {
   Query: {
-    allUsers: async () => {
-      const result = await db.collection('user').find().toArray();
-      return result;
+    allUsers: async (root, args) => {
+      const resultData = await db.collection('user').find();
+
+      if (Number.isInteger(args.first)) {
+        await resultData.limit(args.first);
+      }
+      if (Number.isInteger(args.skip)) {
+        await resultData.skip(args.skip);
+      }
+      switch (args.orderBy) {
+        case 'id_ASC':
+          await resultData.sort({ _id: 1 });
+          break;
+        case 'id_DESC':
+          await resultData.sort({ _id: -1 });
+          break;
+        case 'firstName_ASC':
+          await resultData.sort({ firstName: 1 });
+          break;
+        case 'firstName_DESC':
+          await resultData.sort({ firstName: -1 });
+          break;
+        case 'lastName_ASC':
+          await resultData.sort({ lastName: 1 });
+          break;
+        case 'lastName_DESC':
+          await resultData.sort({ lastName: -1 });
+          break;
+        case 'phone_ASC':
+          await resultData.sort({ phone: 1 });
+          break;
+        case 'phone_DESC':
+          await resultData.sort({ phone: -1 });
+          break;
+      }
+      return await resultData.toArray();
     },
     userById: async (root, args, context, info) => {
-      const result = await db.collection('user').findOne({_id: parseInt(args.id)});
+      const result = await db.collection('user').findOne({ _id: parseInt(args.id) });
       return result;
     },
     filterUsers: async (root, args, context, info) => {
@@ -33,7 +66,7 @@ const resolvers = {
   },
   Mutation: {
     addUser: async (parent, args) => {
-      const lastId = await db.collection('user').find({}).sort({_id:-1}).limit(1).toArray();
+      const lastId = await db.collection('user').find({}).sort({ _id: -1 }).limit(1).toArray();
 
       const newUser = {
         _id: lastId[0]._id + 1,
